@@ -5,8 +5,7 @@ extern crate pairing;
 extern crate rand;
 use bellman::{Circuit, ConstraintSystem, SynthesisError};
 use pairing::{Engine, Field, PrimeField};
-
-mod cube;
+mod sum;
 
 fn main() {
     use bellman::groth16::{
@@ -15,15 +14,15 @@ fn main() {
     use pairing::bls12_381::{Bls12, Fr};
     use rand::thread_rng;
 
-    println!("Prove that I know x such that x^3 + x + 5 == 35.");
+    println!("Prove that I know x such that x+1.");
 
     let rng = &mut thread_rng();
 
-    println!("Creating parameters");
+    println!("Creating parameters...");
 
     // Create parameters for our circuit
     let params = {
-        let c = cube::CubeDemo::<Bls12> { x: None };
+        let c = sum::SumDemo::<Bls12> { x: None, out: None };
 
         generate_random_parameters(c, rng).unwrap()
     };
@@ -34,12 +33,13 @@ fn main() {
     println!("Creating proofs...");
 
     // Create an instance of circuit
-    let c = cube::CubeDemo::<Bls12> {
+    let c = sum::SumDemo::<Bls12> {
         x: Fr::from_str("3"),
+        out: Fr::from_str("4"),
     };
 
     // Create a groth16 proof with our parameters.
     let proof = create_random_proof(c, &params, rng).unwrap();
 
-    assert!(verify_proof(&pvk, &proof, &[Fr::from_str("35").unwrap()]).unwrap());
+    assert!(verify_proof(&pvk, &proof, &[Fr::from_str("5").unwrap()]).unwrap());
 }

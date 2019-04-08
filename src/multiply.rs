@@ -88,7 +88,7 @@ fn test_multiply(){
     // `OsRng` (for example) in production software.
     let rng = &mut thread_rng();
     
-    println!("Creating parameters...");
+    println!("Creating parameters for multiply");
     
     // Create parameters for our circuit
     let params = {
@@ -103,7 +103,6 @@ fn test_multiply(){
         generate_random_parameters(c, rng).unwrap()
     };
     
-    println!("Got params {}",params);
 
     // Prepare the verification key (for proof verification)
     let pvk = prepare_verifying_key(&params.vk);
@@ -120,7 +119,6 @@ fn test_multiply(){
         b: Fr::from_str("3"),
         c: public_input
     };
-    
     
     // Create a groth16 proof with our parameters.
     let proof = create_random_proof(c, &params, rng).unwrap();
