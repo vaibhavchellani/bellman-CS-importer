@@ -99,15 +99,18 @@ fn test_multiply(){
             b: None,
             c: None
         };
-
+        println!("generating param {}",c);
         generate_random_parameters(c, rng).unwrap()
     };
     
+    println!("Got params {}",params);
+
     // Prepare the verification key (for proof verification)
     let pvk = prepare_verifying_key(&params.vk);
+    println!("Verification key prepared {}",pvk);
 
     println!("Creating proofs...");
-    
+
     let public_input = Fr::from_str("21");
     
     // Create an instance of circuit
@@ -117,6 +120,7 @@ fn test_multiply(){
         b: Fr::from_str("3"),
         c: public_input
     };
+    
     
     // Create a groth16 proof with our parameters.
     let proof = create_random_proof(c, &params, rng).unwrap();
